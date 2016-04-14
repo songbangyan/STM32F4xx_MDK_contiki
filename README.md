@@ -1,0 +1,5 @@
+# STM32F4xx_MDK_contiki
+打算将contiki移植到STM32F407平台，
+使用编译器MDK
+ST的库使用STM32F4xx_DSP_StdPeriph_Lib_V1.6.1
+contiki的版本为3.0
