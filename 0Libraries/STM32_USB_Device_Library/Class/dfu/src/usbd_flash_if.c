@@ -2,20 +2,26 @@
   ******************************************************************************
   * @file    usbd_flash_if.c
   * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    22-July-2011
+  * @version V1.2.0
+  * @date    09-November-2015
   * @brief   Specific media access Layer for internal flash.
   ******************************************************************************
   * @attention
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
   ******************************************************************************
   */ 
 
@@ -56,7 +62,7 @@ DFU_MAL_Prop_TypeDef DFU_Flash_cb =
   * @brief  FLASH_If_Init
   *         Memory initialization routine.
   * @param  None
-  * @retval MAL_OK if operation is successeful, MAL_FAIL else.
+  * @retval MAL_OK if operation is successful, MAL_FAIL else.
   */
 uint16_t FLASH_If_Init(void)
 {
@@ -70,7 +76,7 @@ uint16_t FLASH_If_Init(void)
   * @brief  FLASH_If_DeInit
   *         Memory deinitialization routine.
   * @param  None
-  * @retval MAL_OK if operation is successeful, MAL_FAIL else.
+  * @retval MAL_OK if operation is successful, MAL_FAIL else.
   */
 uint16_t FLASH_If_DeInit(void)
 {
@@ -89,7 +95,7 @@ uint16_t FLASH_If_DeInit(void)
 *******************************************************************************/
 uint16_t FLASH_If_Erase(uint32_t Add)
 {
-#ifdef STM32F2XX
+#if !defined(STM32F10X_CL)
   /* Check which sector has to be erased */
   if (Add < 0x08004000)
   {
@@ -143,10 +149,10 @@ uint16_t FLASH_If_Erase(uint32_t Add)
   {
     return MAL_FAIL;    
   }
-#elif defined(STM32F10X_CL)
+#else
   /* Call the standard Flash erase function */
   FLASH_ErasePage(Add);  
-#endif /* STM32F2XX */
+#endif /* STM32F10X_CL */
   
   return MAL_OK;
 }
@@ -156,7 +162,7 @@ uint16_t FLASH_If_Erase(uint32_t Add)
   *         Memory write routine.
   * @param  Add: Address to be written to.
   * @param  Len: Number of data to be written (in bytes).
-  * @retval MAL_OK if operation is successeful, MAL_FAIL else.
+  * @retval MAL_OK if operation is successful, MAL_FAIL else.
   */
 uint16_t FLASH_If_Write(uint32_t Add, uint32_t Len)
 {
@@ -184,7 +190,7 @@ uint16_t FLASH_If_Write(uint32_t Add, uint32_t Len)
   *         Memory read routine.
   * @param  Add: Address to be read from.
   * @param  Len: Number of data to be read (in bytes).
-  * @retval Pointer to the phyisical address where data should be read.
+  * @retval Pointer to the physical address where data should be read.
   */
 uint8_t *FLASH_If_Read (uint32_t Add, uint32_t Len)
 {
@@ -218,4 +224,4 @@ uint16_t FLASH_If_CheckAdd(uint32_t Add)
     return MAL_FAIL;
   }
 }
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

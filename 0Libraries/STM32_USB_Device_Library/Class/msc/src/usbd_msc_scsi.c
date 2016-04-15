@@ -2,20 +2,26 @@
   ******************************************************************************
   * @file    usbd_msc_scsi.c
   * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    22-July-2011
+  * @version V1.2.0
+  * @date    09-November-2015
   * @brief   This file provides all the USBD SCSI layer functions.
   ******************************************************************************
   * @attention
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
   ******************************************************************************
   */ 
 
@@ -260,9 +266,9 @@ static int8_t SCSI_ReadCapacity10(uint8_t lun, uint8_t *params)
   else
   {
     
-    MSC_BOT_Data[0] = (uint8_t)(SCSI_blk_nbr - 1 >> 24);
-    MSC_BOT_Data[1] = (uint8_t)(SCSI_blk_nbr - 1 >> 16);
-    MSC_BOT_Data[2] = (uint8_t)(SCSI_blk_nbr - 1 >>  8);
+    MSC_BOT_Data[0] = (uint8_t)((SCSI_blk_nbr - 1) >> 24);
+    MSC_BOT_Data[1] = (uint8_t)((SCSI_blk_nbr - 1) >> 16);
+    MSC_BOT_Data[2] = (uint8_t)((SCSI_blk_nbr - 1) >>  8);
     MSC_BOT_Data[3] = (uint8_t)(SCSI_blk_nbr - 1);
     
     MSC_BOT_Data[4] = (uint8_t)(SCSI_blk_size >>  24);
@@ -303,9 +309,9 @@ static int8_t SCSI_ReadFormatCapacity(uint8_t lun, uint8_t *params)
   else
   {
     MSC_BOT_Data[3] = 0x08;
-    MSC_BOT_Data[4] = (uint8_t)(blk_nbr - 1 >> 24);
-    MSC_BOT_Data[5] = (uint8_t)(blk_nbr - 1 >> 16);
-    MSC_BOT_Data[6] = (uint8_t)(blk_nbr - 1 >>  8);
+    MSC_BOT_Data[4] = (uint8_t)((blk_nbr - 1) >> 24);
+    MSC_BOT_Data[5] = (uint8_t)((blk_nbr - 1) >> 16);
+    MSC_BOT_Data[6] = (uint8_t)((blk_nbr - 1) >>  8);
     MSC_BOT_Data[7] = (uint8_t)(blk_nbr - 1);
     
     MSC_BOT_Data[8] = 0x02;
@@ -592,6 +598,13 @@ static int8_t SCSI_Verify10(uint8_t lun , uint8_t *params){
     return -1; /* Error, Verify Mode Not supported*/
   }
   
+  SCSI_blk_addr = (params[2] << 24) | \
+    (params[3] << 16) | \
+      (params[4] <<  8) | \
+        params[5];
+  SCSI_blk_len = (params[7] <<  8) | \
+    params[8];  
+    
   if(SCSI_CheckAddressRange(lun, SCSI_blk_addr, SCSI_blk_len) < 0)
   {
     return -1; /* error */      
@@ -719,4 +732,4 @@ static int8_t SCSI_ProcessWrite (uint8_t lun)
   * @}
   */ 
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

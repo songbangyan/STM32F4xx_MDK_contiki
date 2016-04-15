@@ -2,20 +2,26 @@
   ******************************************************************************
   * @file    usbh_msc_scsi.c 
   * @author  MCD Application Team
-  * @version V2.0.0
-  * @date    22-July-2011
+  * @version V2.2.0
+  * @date    09-November-2015
   * @brief   This file implements the SCSI commands
   ******************************************************************************
   * @attention
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
   ******************************************************************************
   */ 
 
@@ -140,7 +146,7 @@ uint8_t USBH_MSC_TestUnitReady (USB_OTG_CORE_HANDLE *pdev)
       USBH_MSC_BOTXferParam.DataLength = USBH_MSC_CSW_MAX_LENGTH;
       USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_TEST_UNIT_READY;
       
-      for(index = CBW_CB_LENGTH; index != 0; index--)
+      for(index = CBW_CB_LENGTH - 1; index != 0; index--)
       {
         USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
       }
@@ -212,7 +218,7 @@ uint8_t USBH_MSC_ReadCapacity10(USB_OTG_CORE_HANDLE *pdev)
       USBH_MSC_BOTXferParam.pRxTxBuff = USBH_DataInBuffer;
       USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_READ_CAPACITY10;
       
-      for(index = CBW_CB_LENGTH; index != 0; index--)
+      for(index = CBW_CB_LENGTH -1; index != 0; index--)
       {
         USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
       }    
@@ -298,7 +304,7 @@ uint8_t USBH_MSC_ModeSense6(USB_OTG_CORE_HANDLE *pdev)
       USBH_MSC_BOTXferParam.pRxTxBuff = USBH_DataInBuffer;
       USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_MODE_SENSE6;
       
-      for(index = CBW_CB_LENGTH; index != 0; index--)
+      for(index = CBW_CB_LENGTH - 1; index != 0; index--)
       {
         USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
       }    
@@ -385,18 +391,17 @@ uint8_t USBH_MSC_RequestSense(USB_OTG_CORE_HANDLE *pdev)
     {
     case CMD_SEND_STATE:
       
-      /*Prepare the CBW and relevent field*/
+      /*Prepare the CBW and relevant field*/
       USBH_MSC_CBWData.field.CBWTransferLength = \
                                                 ALLOCATION_LENGTH_REQUEST_SENSE;
       USBH_MSC_CBWData.field.CBWFlags = USB_EP_DIR_IN;
       USBH_MSC_CBWData.field.CBWLength = CBW_LENGTH;
-      
       USBH_MSC_BOTXferParam.pRxTxBuff = USBH_DataInBuffer;
       USBH_MSC_BOTXferParam.MSCStateBkp = USBH_MSC_BOTXferParam.MSCStateCurrent;
       USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_REQUEST_SENSE;
       
 
-      for(index = CBW_CB_LENGTH; index != 0; index--)
+      for(index = CBW_CB_LENGTH - 1; index != 0; index--)
       {
         USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
       }    
@@ -406,7 +411,7 @@ uint8_t USBH_MSC_RequestSense(USB_OTG_CORE_HANDLE *pdev)
       USBH_MSC_CBWData.field.CBWCB[4]  = ALLOCATION_LENGTH_REQUEST_SENSE;
       
       USBH_MSC_BOTXferParam.BOTState = USBH_MSC_SEND_CBW;
-      /* Start the transfer, then let the state machine magage 
+      /* Start the transfer, then let the state machine manage 
       the other transactions */
       USBH_MSC_BOTXferParam.MSCState = USBH_MSC_BOT_USB_TRANSFERS;
       USBH_MSC_BOTXferParam.BOTXferStatus = USBH_MSC_BUSY;
@@ -488,7 +493,7 @@ uint8_t USBH_MSC_Write10(USB_OTG_CORE_HANDLE *pdev,
       USBH_MSC_BOTXferParam.pRxTxBuff = dataBuffer;
       
       
-      for(index = CBW_CB_LENGTH; index != 0; index--)  
+      for(index = CBW_CB_LENGTH - 1; index != 0; index--)  
       {
         USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
       }
@@ -504,13 +509,13 @@ uint8_t USBH_MSC_Write10(USB_OTG_CORE_HANDLE *pdev,
       /*USBH_MSC_PAGE_LENGTH = 512*/
       nbOfPages = nbOfbytes/ USBH_MSC_PAGE_LENGTH; 
       
-      /*Tranfer length */
+      /*Transfer length */
       USBH_MSC_CBWData.field.CBWCB[7]  = (((uint8_t *)&nbOfPages)[1]) ; 
       USBH_MSC_CBWData.field.CBWCB[8]  = (((uint8_t *)&nbOfPages)[0]) ; 
       
       USBH_MSC_BOTXferParam.BOTState = USBH_MSC_SEND_CBW;
       /* Start the transfer, then let the state machine 
-      magage the other transactions */
+      manage the other transactions */
       USBH_MSC_BOTXferParam.MSCState = USBH_MSC_BOT_USB_TRANSFERS;
       USBH_MSC_BOTXferParam.BOTXferStatus = USBH_MSC_BUSY;
       USBH_MSC_BOTXferParam.CmdStateMachine = CMD_WAIT_STATUS;
@@ -571,14 +576,14 @@ uint8_t USBH_MSC_Read10(USB_OTG_CORE_HANDLE *pdev,
     switch(USBH_MSC_BOTXferParam.CmdStateMachine)
     {
     case CMD_SEND_STATE:
-      /*Prepare the CBW and relevent field*/
+      /*Prepare the CBW and relevant field*/
       USBH_MSC_CBWData.field.CBWTransferLength = nbOfbytes;
       USBH_MSC_CBWData.field.CBWFlags = USB_EP_DIR_IN;
       USBH_MSC_CBWData.field.CBWLength = CBW_LENGTH;
       
       USBH_MSC_BOTXferParam.pRxTxBuff = dataBuffer;
       
-      for(index = CBW_CB_LENGTH; index != 0; index--)
+      for(index = CBW_CB_LENGTH - 1; index != 0; index--)
       {
         USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
       }
@@ -595,14 +600,14 @@ uint8_t USBH_MSC_Read10(USB_OTG_CORE_HANDLE *pdev,
       /*USBH_MSC_PAGE_LENGTH = 512*/
       nbOfPages = nbOfbytes/ USBH_MSC_PAGE_LENGTH;  
       
-      /*Tranfer length */
+      /*Transfer length */
       USBH_MSC_CBWData.field.CBWCB[7]  = (((uint8_t *)&nbOfPages)[1]) ; 
       USBH_MSC_CBWData.field.CBWCB[8]  = (((uint8_t *)&nbOfPages)[0]) ; 
       
       
       USBH_MSC_BOTXferParam.BOTState = USBH_MSC_SEND_CBW;
       /* Start the transfer, then let the state machine 
-      magage the other transactions */
+      manage the other transactions */
       USBH_MSC_BOTXferParam.MSCState = USBH_MSC_BOT_USB_TRANSFERS;
       USBH_MSC_BOTXferParam.BOTXferStatus = USBH_MSC_BUSY;
       USBH_MSC_BOTXferParam.CmdStateMachine = CMD_WAIT_STATUS;
@@ -668,7 +673,7 @@ uint8_t USBH_MSC_Read10(USB_OTG_CORE_HANDLE *pdev,
   * @}
   */
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
 
 

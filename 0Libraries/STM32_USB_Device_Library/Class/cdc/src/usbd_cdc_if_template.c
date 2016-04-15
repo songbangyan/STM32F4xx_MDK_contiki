@@ -2,20 +2,26 @@
   ******************************************************************************
   * @file    usbd_cdc_if_template.c
   * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    22-July-2011
+  * @version V1.2.0
+  * @date    09-November-2015
   * @brief   Generic media access Layer.
   ******************************************************************************
   * @attention
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
   ******************************************************************************
   */ 
 
@@ -25,7 +31,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_if_template.h"
-#include  "stm32_eval.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -62,7 +67,7 @@ CDC_IF_Prop_TypeDef TEMPLATE_fops =
   * @brief  TEMPLATE_Init
   *         Initializes the CDC media low layer
   * @param  None
-  * @retval Result of the opeartion: USBD_OK if all operations are OK else USBD_FAIL
+  * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
   */
 static uint16_t TEMPLATE_Init(void)
 {
@@ -76,7 +81,7 @@ static uint16_t TEMPLATE_Init(void)
   * @brief  TEMPLATE_DeInit
   *         DeInitializes the CDC media low layer
   * @param  None
-  * @retval Result of the opeartion: USBD_OK if all operations are OK else USBD_FAIL
+  * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
   */
 static uint16_t TEMPLATE_DeInit(void)
 {
@@ -93,7 +98,7 @@ static uint16_t TEMPLATE_DeInit(void)
   * @param  Cmd: Command code            
   * @param  Buf: Buffer containing command data (request parameters)
   * @param  Len: Number of data to be sent (in bytes)
-  * @retval Result of the opeartion: USBD_OK if all operations are OK else USBD_FAIL
+  * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
   */
 static uint16_t TEMPLATE_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
 { 
@@ -148,7 +153,7 @@ static uint16_t TEMPLATE_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
   *         this function.
   * @param  Buf: Buffer of data to be sent
   * @param  Len: Number of data to be sent (in bytes)
-  * @retval Result of the opeartion: USBD_OK if all operations are OK else USBD_FAIL
+  * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
   */
 static uint16_t TEMPLATE_DataTx (uint8_t* Buf, uint32_t Len)
 {
@@ -199,4 +204,4 @@ static uint16_t TEMPLATE_DataRx (uint8_t* Buf, uint32_t Len)
   return USBD_OK;
 }
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

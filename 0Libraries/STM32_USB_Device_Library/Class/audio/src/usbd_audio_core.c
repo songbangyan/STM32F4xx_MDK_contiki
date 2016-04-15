@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    usbd_audio_core.c
   * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    22-July-2011
+  * @version V1.2.0
+  * @date    09-November-2015
   * @brief   This file provides the high layer firmware functions to manage the 
   *          following functionalities of the USB Audio Class:
   *           - Initialization and Configuration of high and low layer
@@ -44,7 +44,7 @@
   *            This driver doesn't implement the following aspects of the specification 
   *            (but it is possible to manage these features with some modifications on this driver):
   *             - AudioControl Endpoint management
-  *             - AudioControl requsests other than SET_CUR and GET_CUR
+  *             - AudioControl requests other than SET_CUR and GET_CUR
   *             - Abstraction layer for AudioControl requests (only Mute functionality is managed)
   *             - Audio Synchronization type: Adaptive
   *             - Audio Compression modules and interfaces
@@ -56,17 +56,23 @@
   *      
   *  @endverbatim
   *                                  
-  ******************************************************************************               
+  ******************************************************************************
   * @attention
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
   ******************************************************************************
   */ 
 
@@ -143,7 +149,7 @@ uint8_t  IsocOutBuff [TOTAL_OUT_BUF_SIZE * 2];
 uint8_t* IsocOutWrPtr = IsocOutBuff;
 uint8_t* IsocOutRdPtr = IsocOutBuff;
 
-/* Main Buffer for Audio Control Rrequests transfers and its relative variables */
+/* Main Buffer for Audio Control Requests transfers and its relative variables */
 uint8_t  AudioCtl[64];
 uint8_t  AudioCtlCmd = 0;
 uint32_t AudioCtlLen = 0;
@@ -331,7 +337,7 @@ static uint8_t usbd_audio_CfgDesc[AUDIO_CONFIG_DESC_SIZE] =
 
 /**
 * @brief  usbd_audio_Init
-*         Initilaizes the AUDIO interface.
+*         Initializes the AUDIO interface.
 * @param  pdev: device instance
 * @param  cfgidx: Configuration index
 * @retval status
@@ -391,8 +397,8 @@ static uint8_t  usbd_audio_DeInit (void  *pdev,
 static uint8_t  usbd_audio_Setup (void  *pdev, 
                                   USB_SETUP_REQ *req)
 {
-  uint16_t len;
-  uint8_t  *pbuf;
+  uint16_t len=USB_AUDIO_DESC_SIZ;
+  uint8_t  *pbuf=usbd_audio_CfgDesc + 18;
   
   switch (req->bmRequest & USB_REQ_TYPE_MASK)
   {
@@ -459,7 +465,7 @@ static uint8_t  usbd_audio_Setup (void  *pdev,
 /**
   * @brief  usbd_audio_EP0_RxReady
   *         Handles audio control requests data.
-  * @param  pdev: device device instance
+  * @param  pdev: device instance
   * @retval status
   */
 static uint8_t  usbd_audio_EP0_RxReady (void  *pdev)
@@ -501,8 +507,10 @@ static uint8_t  usbd_audio_DataIn (void *pdev, uint8_t epnum)
   * @param  epnum: endpoint number
   * @retval status
   */
+__IO uint32_t DataOutCounter = 0;
 static uint8_t  usbd_audio_DataOut (void *pdev, uint8_t epnum)
 {     
+  DataOutCounter++;
   if (epnum == AUDIO_OUT_EP)
   {    
     /* Increment the Buffer pointer or roll it back when all buffers are full */
@@ -662,4 +670,4 @@ static uint8_t  *USBD_audio_GetCfgDesc (uint8_t speed, uint16_t *length)
   * @}
   */ 
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
