@@ -6,14 +6,14 @@
 #include <sys/etimer.h>
 #include <bsp.h>
 
+#define TICKS_PER_INT (SystemCoreClock / 8 / CLOCK_CONF_SECOND)
 
 static volatile clock_time_t current_clock = 0;
 static volatile unsigned long current_seconds = 0;
 static unsigned int second_countdown = CLOCK_CONF_SECOND;
 
 volatile unsigned int systick = 0;
-void
-SysTick_Handler(void)
+void SysTick_Handler(void)
 {
   current_clock++;
 	systick++;
@@ -28,10 +28,9 @@ SysTick_Handler(void)
   }
 }
 
-void
-clock_init()
+void clock_init()
 {
-  if (SysTick_Config(SystemCoreClock / 1000))
+  if (SysTick_Config(TICKS_PER_INT))
 //  if (SysTick_Config(CLOCK_SECOND))
   { 
     /* Capture error */ 
@@ -41,8 +40,7 @@ clock_init()
 	NVIC_SetPriority(SysTick_IRQn, 6);
 }
 
-clock_time_t
-clock_time(void)
+clock_time_t clock_time(void)
 {
   return current_clock;
 }
@@ -56,8 +54,7 @@ clock_time(void)
 
 #ifndef __MAKING_DEPS__
 
-void
-clock_delay(unsigned int t)
+void clock_delay(unsigned int t)
 {
 #ifdef __THUMBEL__ 
   asm volatile("1: mov r1,%2\n2:\tsub r1,#1\n\tbne 2b\n\tsub %0,#1\n\tbne 1b\n":"=l"(t):"0"(t),"l"(SPIN_COUNT));
@@ -69,8 +66,7 @@ clock_delay(unsigned int t)
 
 #endif /* __MAKING_DEPS__ */
 
-unsigned long
-clock_seconds(void)
+unsigned long clock_seconds(void)
 {
   return current_seconds;
 }
