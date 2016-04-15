@@ -12,20 +12,17 @@ extern volatile unsigned int systick;
 
 unsigned int idle_count = 0;
 //事件的声明 
-static process_event_t event_ledoff;
-static process_event_t event_ledon;
+//static process_event_t event_ledoff;
+//static process_event_t event_ledon;
 
 
-//函数声明 
-void Delay_us(__IO u32 nCount);
 
 
 PROCESS(blink_process, "Blink");
 AUTOSTART_PROCESSES(&blink_process);
 
 PROCESS_THREAD(blink_process, ev, data)
-{
-  
+{  
   PROCESS_BEGIN();
   while(1) 
   {
@@ -67,7 +64,7 @@ int main()
 {
   Bsp_Init();
   printf("\r\nInitialising\r\n");
-  
+  printf("\r\nCompile time is:%s",compile_time);
   clock_init();
   process_init();
   process_start(&etimer_process, NULL);
@@ -83,14 +80,9 @@ int main()
     /* Stop processor clock */
     /* asm("wfi"::); */ 
   }
-  return 0;
+//  return 0;
 }
 
-
-void Delay_us(__IO u32 nCount)
-{
-  for(;nCount != 0; nCount--);
-}
 
 
 
