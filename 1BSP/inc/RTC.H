@@ -27,4 +27,5 @@ u8 RTC_GetWeek(u16 year,u8 month,u8 day);
 u32 Time_Pasted(Time_Def *Oldtime);
 u32 Time_comp(Time_Def *Oldtime, Time_Def *Newtime);
 
+void BSP_RTC_init(void);
 #endif

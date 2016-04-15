@@ -224,65 +224,43 @@ u32 Time_comp(Time_Def *Oldtime, Time_Def *Newtime)
 * Return         : None
 *******************************************************************************/
 void BSP_RTC_init(void)
-{
-  Time_Def rtc_real;
-  NVIC_InitTypeDef NVIC_InitStructure;
-  /* Enable PWR and BKP clocks */
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);  
-  /* Allow access to BKP Domain */
-  PWR_BackupAccessCmd(ENABLE);  
-  /* Reset Backup Domain */
-  BKP_DeInit(); 
-  /* Select the RTC Clock Source */
-  RCC_RTCCLKConfig(RCC_RTCCLKSource_HSE_Div128);  
-  /* Enable RTC Clock */
-  RCC_RTCCLKCmd(ENABLE);  
-  /* Wait for RTC registers synchronization */
-  RTC_WaitForSynchro(); 
-  /* Wait until last write operation on RTC registers has finished */
-  RTC_WaitForLastTask();  
-  /* Enable the RTC Second */
-  RTC_ITConfig(RTC_IT_SEC, ENABLE); 
-  /* Wait until last write operation on RTC registers has finished */
-  RTC_WaitForLastTask();  
-  /* Set RTC prescaler: set RTC period to 1sec */
-  RTC_SetPrescaler(62499);  
-  /* Wait until last write operation on RTC registers has finished */
-  RTC_WaitForLastTask();  
-  /* To output second signal on Tamper pin, the tamper functionality
-     must be disabled (by default this functionality is disabled) */
-  BKP_TamperPinCmd(DISABLE);  
+{	
+	RTC_InitTypeDef RTC_InitStructure;
+	RTC_TimeTypeDef RTC_TimeStructure;
+	/* Enable the PWR clock */
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+
+  /* Allow access to RTC */
+  PWR_BackupAccessCmd(ENABLE);
   
-  /* Configure the NVIC Preemption Priority Bits */
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0); 
-  /* Enable the RTC Interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = RTC_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 8;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+  /* Reset RTC Domain */
+  RCC_BackupResetCmd(ENABLE);
+  RCC_BackupResetCmd(DISABLE);
   
-  GetBuildTime(&rtc_real);
-  rtc_real.year += 2000;
-  RTC_Set(&rtc_real);
-}
-/*******************************************************************************
-* Function Name  : RTC_IRQHandler
-* Description    : This function handles RTC global interrupt request.
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
-void RTC_IRQHandler(void)
-{
-  if (RTC_GetITStatus(RTC_IT_SEC) != RESET)
+  /* Enable the LSE OSC */
+  RCC_LSEConfig(RCC_LSE_ON);
+
+  /* Wait till LSE is ready */  
+  while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
   {
-    /* Clear the RTC Second interrupt */
-    RTC_ClearITPendingBit(RTC_IT_SEC);    
-    /* Wait until last write operation on RTC registers has finished */
-    RTC_WaitForLastTask();
-    g_sec++;
   }
+
+  /* Select the RTC Clock Source */
+  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
+  
+  /* Configure the RTC data register and RTC prescaler */
+  /* ck_spre(1Hz) = RTCCLK(LSI) /(AsynchPrediv + 1)*(SynchPrediv + 1)*/
+  RTC_InitStructure.RTC_AsynchPrediv = 0x1F;
+  RTC_InitStructure.RTC_SynchPrediv  = 0x3FF;
+  RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;
+  RTC_Init(&RTC_InitStructure);
+  
+  /* Set the time to 00h 00mn 00s AM */
+  RTC_TimeStructure.RTC_H12     = RTC_H12_AM;
+  RTC_TimeStructure.RTC_Hours   = 0;
+  RTC_TimeStructure.RTC_Minutes = 0;
+  RTC_TimeStructure.RTC_Seconds = 0;  
+  RTC_SetTime(RTC_Format_BCD, &RTC_TimeStructure);
 }
 
 
