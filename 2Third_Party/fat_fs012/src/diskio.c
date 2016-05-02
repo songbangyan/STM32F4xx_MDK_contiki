@@ -7,10 +7,10 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
-#include "diskio.h"		/* FatFs lower layer API */
-#include "usbdisk.h"	/* Example: Header file of existing USB MSD control module */
-#include "atadrive.h"	/* Example: Header file of existing ATA harddisk control module */
-#include "sdcard.h"		/* Example: Header file of existing MMC/SDC contorl module */
+#include "diskio.h"
+#include "stm32f4xx.h"
+#include "ffconf.h"
+#include "stm324xg_eval_sdio_sd.h"
 
 /* Definitions of physical drive number for each drive */
 #define ATA		0	/* Example: Map ATA harddisk to physical drive 0 */
@@ -21,39 +21,13 @@
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/
-
 DSTATUS disk_status (
-	BYTE pdrv		/* Physical drive nmuber to identify the drive */
+	BYTE drv		/* Physical drive nmuber (0) */
 )
 {
-	DSTATUS stat;
-	int result;
-
-	switch (pdrv) {
-	case ATA :
-		result = ATA_disk_status();
-
-		// translate the reslut code here
-
-		return stat;
-
-	case MMC :
-		result = MMC_disk_status();
-
-		// translate the reslut code here
-
-		return stat;
-
-	case USB :
-		result = USB_disk_status();
-
-		// translate the reslut code here
-
-		return stat;
-	}
-	return STA_NOINIT;
+	if (drv) return STA_NOINIT;		/* Supports only single drive */
+	return 0;
 }
-
 
 
 /*-----------------------------------------------------------------------*/
@@ -61,36 +35,34 @@ DSTATUS disk_status (
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_initialize (
-	BYTE pdrv				/* Physical drive nmuber to identify the drive */
+	BYTE drv				/* Physical drive nmuber (0..) */
 )
 {
-	DSTATUS stat;
-	int result;
+  NVIC_InitTypeDef NVIC_InitStructure;
+  SD_Error res = SD_OK;
 
-	switch (pdrv) {
-	case ATA :
-		result = ATA_disk_initialize();
+  /* Configure the NVIC Preemption Priority Bits */
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
-		// translate the reslut code here
+  NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure); 
 
-		return stat;
+  NVIC_InitStructure.NVIC_IRQChannel = SD_SDIO_DMA_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  NVIC_Init(&NVIC_InitStructure);
 
-	case MMC :
-		result = MMC_disk_initialize();
+  res =  SD_Init(); 
 
-		// translate the reslut code here
-
-		return stat;
-
-	case USB :
-		result = USB_disk_initialize();
-
-		// translate the reslut code here
-
-		return stat;
-	}
-	return STA_NOINIT;
+  if(res == SD_OK)
+  {
+    res = (SD_Error)0x0;
+  }
+  return ((DSTATUS)res);
 }
+
 
 
 
@@ -105,39 +77,22 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
-	DRESULT res;
-	int result;
+	SD_Error status = SD_OK;
 
-	switch (pdrv) {
-	case ATA :
-		// translate the arguments here
+	SD_ReadMultiBlocks(buff, sector << 9, 512, 1);
 
-		result = ATA_disk_read(buff, sector, count);
+	/* Check if the Transfer is finished */
+	status =  SD_WaitReadOperation();
+	while(SD_GetStatus() != SD_TRANSFER_OK);
 
-		// translate the reslut code here
-
-		return res;
-
-	case MMC :
-		// translate the arguments here
-
-		result = MMC_disk_read(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
-
-	case USB :
-		// translate the arguments here
-
-		result = USB_disk_read(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
+	if (status == SD_OK)
+	{
+		return RES_OK;
 	}
-
-	return RES_PARERR;
+	else
+	{
+		return RES_ERROR;
+	}
 }
 
 
@@ -153,41 +108,34 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	DRESULT res;
-	int result;
+	SD_Error status = SD_OK;
 
-	switch (pdrv) {
-	case ATA :
-		// translate the arguments here
+	SD_WriteMultiBlocks((BYTE *)buff, sector << 9, 512, 1);
 
-		result = ATA_disk_write(buff, sector, count);
+	/* Check if the Transfer is finished */
+	status = SD_WaitWriteOperation();
+	while(SD_GetStatus() != SD_TRANSFER_OK);     
 
-		// translate the reslut code here
-
-		return res;
-
-	case MMC :
-		// translate the arguments here
-
-		result = MMC_disk_write(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
-
-	case USB :
-		// translate the arguments here
-
-		result = USB_disk_write(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
+	if (status == SD_OK)
+	{
+		return RES_OK;
 	}
-
-	return RES_PARERR;
+	else
+	{
+		return RES_ERROR;
+	}
 }
 
+DWORD get_fattime ()
+{
+	return	((2006UL-1980) << 25)	      // Year = 2006
+			| (2UL << 21)	      // Month = Feb
+			| (9UL << 16)	      // Day = 9
+			| (22U << 11)	      // Hour = 22
+			| (30U << 5)	      // Min = 30
+			| (0U >> 1)	      // Sec = 0
+			;
+}
 
 
 /*-----------------------------------------------------------------------*/
@@ -200,29 +148,25 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	DRESULT res;
-	int result;
+	DRESULT res = RES_OK;
+	switch (cmd) {
+	
 
-	switch (pdrv) {
-	case ATA :
+	case GET_SECTOR_COUNT :	  // Get number of sectors on the disk (DWORD)
+		*(DWORD*)buff = 131072;	// 4*1024*32 = 131072
+		res = RES_OK;
+		break;
 
-		// Process of the command for the ATA drive
+	case GET_SECTOR_SIZE :	  // Get R/W sector size (WORD) 
+		*(WORD*)buff = 512;
+		res = RES_OK;
+		break;
 
-		return res;
-
-	case MMC :
-
-		// Process of the command for the MMC/SD card
-
-		return res;
-
-	case USB :
-
-		// Process of the command the USB drive
-
-		return res;
-	}
-
-	return RES_PARERR;
+	case GET_BLOCK_SIZE :	    // Get erase block size in unit of sector (DWORD)
+		*(DWORD*)buff = 32;
+		res = RES_OK;
+		}
+	
+return res;
 }
 

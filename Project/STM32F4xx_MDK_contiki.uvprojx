@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER STM32F40_41xxx AUTOSTART_ENABLE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\3APP;..\2Third_Party\contiki-3.0\core\sys;..\2Third_Party\contiki-3.0\core;..\2Third_Party\contiki-3.0\core\lib;..\2Third_Party\contiki-3.0\cpu\arm\stm32f4xx;..\1BSP\inc;..\0Libraries\CMSIS\Include;..\0Libraries\STM32F4xx_StdPeriph_Driver\inc;..\0Libraries\CMSIS\Device\ST\STM32F4xx\Include</IncludePath>
+              <IncludePath>..\3APP;..\2Third_Party\fat_fs012\src;..\2Third_Party\contiki-3.0\core\sys;..\2Third_Party\contiki-3.0\core;..\2Third_Party\contiki-3.0\core\lib;..\2Third_Party\contiki-3.0\cpu\arm\stm32f4xx;..\1BSP\inc;..\0Libraries\CMSIS\Include;..\0Libraries\STM32F4xx_StdPeriph_Driver\inc;..\0Libraries\CMSIS\Device\ST\STM32F4xx\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -629,6 +629,26 @@
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\2Third_Party\contiki-3.0\core\sys\timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Fatfs</GroupName>
+          <Files>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2Third_Party\fat_fs012\src\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2Third_Party\fat_fs012\src\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccsbcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2Third_Party\fat_fs012\src\option\ccsbcs.c</FilePath>
             </File>
           </Files>
         </Group>
