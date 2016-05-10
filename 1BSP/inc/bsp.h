@@ -7,6 +7,8 @@
 #include "LED.h"
 #include "uart.h"
 #include "RTC.h"
+#include "lcd12864.h " 
+
 
 void Bsp_Init(void);
 #endif

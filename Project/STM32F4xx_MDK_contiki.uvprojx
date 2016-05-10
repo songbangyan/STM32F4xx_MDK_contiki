@@ -585,6 +585,11 @@
               <FileType>1</FileType>
               <FilePath>..\1BSP\src\stm324xg_eval_sdio_sd.c</FilePath>
             </File>
+            <File>
+              <FileName>LCD12864.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1BSP\src\LCD12864.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -654,13 +659,6 @@
         </Group>
         <Group>
           <GroupName>Doc</GroupName>
-          <Files>
-            <File>
-              <FileName>readme.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\user\readme.txt</FilePath>
-            </File>
-          </Files>
         </Group>
       </Groups>
     </Target>

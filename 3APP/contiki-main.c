@@ -7,11 +7,11 @@
 #include <sys/autostart.h>  
 #include "contiki.h"
 
-static u8 compile_time[]=__DATE__ __TIME__;
+static u8 compile_time[]=__DATE__  __TIME__;
 extern volatile unsigned int systick;
 
 unsigned int idle_count = 0;
-//事件的声明 
+//????? 
 //static process_event_t event_ledoff;
 //static process_event_t event_ledon;
 
@@ -27,7 +27,7 @@ PROCESS_THREAD(blink_process, ev, data)
   while(1) 
   {
     static struct etimer et;
-		printf("\r\n 1time %d",systick);
+		printf("\r\n led time %d",systick);
     etimer_set(&et, CLOCK_SECOND);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));    
     LED_On(LED0);
@@ -53,8 +53,30 @@ PROCESS_THREAD(blink_process, ev, data)
     etimer_set(&et, CLOCK_SECOND);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));    
     LED_Off(LED3); 
-		printf("\r\n 2time %d",systick);
+//		printf("\r\n 2time %d",systick);
 
+  }
+   PROCESS_END();
+}
+
+
+PROCESS(lcdrefur, "Lcdrefur");
+//PROCESS(&lcdrefur);
+
+PROCESS_THREAD(lcdrefur, ev, data)
+{  
+  PROCESS_BEGIN();
+  while(1) 
+  {
+    static struct etimer et1;
+		printf("\r\n lcd time %d",systick);
+    etimer_set(&et1, CLOCK_SECOND*2);
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));   
+		LCDrefur(0x50);
+    etimer_set(&et1, CLOCK_SECOND*2);
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));    
+    LCDrefur(0x0a); 
+//		printf("\r\n lcd time b %d",systick);
   }
    PROCESS_END();
 }
@@ -68,6 +90,7 @@ int main()
   clock_init();
   process_init();
   process_start(&etimer_process, NULL);
+  process_start(&lcdrefur, NULL);
   autostart_start(autostart_processes);
   printf("Processes running\r\n");
   while(1) {
