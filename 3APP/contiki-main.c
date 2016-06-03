@@ -72,7 +72,8 @@ PROCESS_THREAD(lcdrefur, ev, data)
 		printf("\r\n lcd time %d",systick);
     etimer_set(&et1, CLOCK_SECOND*2);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));   
-		WriteLine(0x50);
+		WriteASCII(0,0,"1");
+		LCDrefur();
     etimer_set(&et1, CLOCK_SECOND*2);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));    
     WriteLine(0x0a); 

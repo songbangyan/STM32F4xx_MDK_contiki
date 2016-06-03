@@ -42,6 +42,7 @@
 
 void InitLCD(void);
 void ClearScreen(void);
+void WriteASCII(u8 x, u8 y, u8 index[1]);
 void LCDrefur(void);
 void WriteLine(u8 index);
 void LCD_shutup(void);

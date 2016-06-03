@@ -1,10 +1,11 @@
 
 #include "lcd12864.h"
+#include "fonts.h"
 
 /* Private typedef -----------------------------------------------------------*/
 //extern HZ_TypeDef HZ1[];
 //extern SZ_TypeDef SZ1[];
-
+unsigned char LCD_dat[8][128];
 //============================================================================= 
 //函 数 名:  Delay_ms() 
 //功 能：	 软件延时
@@ -225,35 +226,35 @@ void WriteWord(u8 x, u8 y, u8 index[2])
 //============================================================================= 
 void WriteASCII(u8 x, u8 y, u8 index[1])
 {
-//	u8 j,i;
-//	u8 *p;
-//	j=0;
-//	i=0;
-//	for(i=0;i<MAXNUMOFSZ;i++)
-//		{
-//		if((SZ1[i].Index[0] == index[0]))
-//			{
-//			p=SZ1[i].Msk;
-//			break;
-//			}
-//		}
-//	if(i == MAXNUMOFSZ)
-//		{
-//		p=SZ1[0].Msk;
-//		}
-//	for(j=0;j<2;j++)				// 整个字符分上下半部分字符
-//		{
-////		lie=y&0xf0;
-////		lie>>=4;
-////		WriteCommand(Page_Add+x+j);
-////		WriteCommand(Row_AddH+lie);
-////		WriteCommand(Row_AddL+y&0x0f);
-//		for(i=0;i<8;i++)
-//			{
-//			LCD_old[x+j][y+i] = p[8*j+i];
-////			WriteData(p[8*j+i]);	
-//			}
-//		} 
+	u8 j,i;
+	u8 *p;
+	j=0;
+	i=0;
+	for(i=0;i<MAXNUMOFSZ;i++)
+	{
+		if((SZ1[i].Index[0] == index[0]))
+		{
+			p=SZ1[i].Msk;
+			break;
+		}
+	}
+	if(i == MAXNUMOFSZ)
+	{
+		p=SZ1[0].Msk;
+	}
+	for(j=0;j<2;j++)				// 整个字符分上下半部分字符
+		{
+//		lie=y&0xf0;
+//		lie>>=4;
+//		WriteCommand(Page_Add+x+j);
+//		WriteCommand(Row_AddH+lie);
+//		WriteCommand(Row_AddL+y&0x0f);
+		for(i=0;i<8;i++)
+			{
+			LCD_dat[x+j][y+i] = p[8*j+i];
+//			WriteData(p[8*j+i]);	
+			}
+		} 
 }
 //============================================================================= 
 //函 数 名: WriteBCD() 
@@ -291,18 +292,18 @@ void WriteBCD(u8 x, u8 y, u8 index)
 //============================================================================= 
 void LCDrefur(void)	
 {
-//	u8 i,j;
-//	LCD_shutup();
-//	for(i=0;i<8;i++)
-//		{
-//        WriteCommand(Page_Add+i);
-//        WriteCommand(Row_AddH);
-//        WriteCommand(Row_AddL); 
-//        for(j=0;j<128;j++)
-//			{
-//			WriteData(LCD_old[i][j]);
-//			}
-//		}
+	u8 i,j;
+	LCD_shutup();
+	for(i=0;i<8;i++)
+		{
+			WriteCommand(Page_Add+i);
+			WriteCommand(Row_AddH);
+			WriteCommand(Row_AddL); 
+			for(j=0;j<128;j++)
+			{
+				WriteData(LCD_dat[i][j]);
+			}
+		}
 }
 //============================================================================= 
 //函 数 名: WriteLine() 
