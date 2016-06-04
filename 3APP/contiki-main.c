@@ -62,7 +62,7 @@ PROCESS_THREAD(blink_process, ev, data)
 
 PROCESS(lcdrefur, "Lcdrefur");
 //PROCESS(&lcdrefur);
-
+extern void dispalytime(void);
 PROCESS_THREAD(lcdrefur, ev, data)
 {  
   PROCESS_BEGIN();
@@ -70,13 +70,14 @@ PROCESS_THREAD(lcdrefur, ev, data)
   {
     static struct etimer et1;
 		printf("\r\n lcd time %d",systick);
-    etimer_set(&et1, CLOCK_SECOND*2);
+    etimer_set(&et1, CLOCK_SECOND);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));   
-		WriteASCII(0,0,"1");
-		LCDrefur();
-    etimer_set(&et1, CLOCK_SECOND*2);
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));    
-    WriteLine(0x0a); 
+		dispalytime();
+//		WriteASCII(0,0,"1");
+//		LCDrefur();
+//    etimer_set(&et1, CLOCK_SECOND*2);
+//    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));    
+//    WriteLine(0x0a); 
 //		printf("\r\n lcd time b %d",systick);
   }
    PROCESS_END();

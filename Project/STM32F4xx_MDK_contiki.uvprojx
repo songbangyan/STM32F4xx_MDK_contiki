@@ -612,6 +612,11 @@
               <FileType>1</FileType>
               <FilePath>..\3APP\contiki-main.c</FilePath>
             </File>
+            <File>
+              <FileName>displaytime.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3APP\displaytime.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

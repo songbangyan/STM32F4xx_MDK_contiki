@@ -251,7 +251,7 @@ void WriteASCII(u8 x, u8 y, u8 index[1])
 //		WriteCommand(Row_AddL+y&0x0f);
 		for(i=0;i<8;i++)
 			{
-			LCD_dat[x+j][y+i] = p[8*j+i];
+				LCD_dat[x+j][y+i] = p[8*j+i];
 //			WriteData(p[8*j+i]);	
 			}
 		} 

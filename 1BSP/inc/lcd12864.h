@@ -14,7 +14,7 @@
 #define Row_Add  0x40   // Scroll Line Start
 
 
-
+#define		ASCII_W	8
 
 /*lcd reset pin def*/
 #define LCD_RST_PORT_RCC	RCC_AHB1Periph_GPIOD
