@@ -88,6 +88,7 @@ PROCESS_THREAD(lcdrefur, ev, data)
 
 int main()
 {
+//	dispalyfilename();
   Bsp_Init();
   printf("\r\nInitialising\r\n");
   printf("\r\nCompile time is:%s",compile_time);
