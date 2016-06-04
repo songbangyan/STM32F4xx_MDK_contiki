@@ -216,7 +216,38 @@ u32 Time_comp(Time_Def *Oldtime, Time_Def *Newtime)
   seccount1 += Newtime->sec;//最后的秒钟加上去
   
   return seccount1 - seccount;
-}/*******************************************************************************
+}
+
+
+void BSP_RTC_Set(void)
+{
+  char Date[] = __DATE__;
+  char Time[] = __TIME__;
+  char mon_s[20]={0};
+  char month_names[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
+  int mon=0, day=0, year=0;
+  int sec=0, min=0, hour=0;
+	RTC_TimeTypeDef RTC_TimeStructure;
+	RTC_DateTypeDef RTC_DateStructure;
+  sscanf(Date, "%s %d %d", mon_s, &day, &year);
+  sscanf(Time, "%d:%d:%d", &hour, &min, &sec);  
+  mon = (strstr(month_names, mon_s)-month_names)/3+1;
+
+	RTC_DateStructure.RTC_Year = Hex2Bcd(year%100);
+	RTC_DateStructure.RTC_Month = Hex2Bcd(mon);
+	RTC_DateStructure.RTC_Date = Hex2Bcd(day);
+	RTC_TimeStructure.RTC_H12 = RTC_H12_AM;
+	RTC_TimeStructure.RTC_Hours = Hex2Bcd(hour);
+	RTC_TimeStructure.RTC_Minutes = Hex2Bcd(min);
+	RTC_TimeStructure.RTC_Seconds = Hex2Bcd(sec);
+	
+	RTC_SetDate(RTC_Format_BCD, &RTC_DateStructure);
+	RTC_SetTime(RTC_Format_BCD, &RTC_TimeStructure);
+	
+}
+
+
+/*******************************************************************************
 * Function Name  : RTC_Configuration
 * Description    : Configures the RTC.
 * Input          : None
@@ -226,7 +257,7 @@ u32 Time_comp(Time_Def *Oldtime, Time_Def *Newtime)
 void BSP_RTC_init(void)
 {	
 	RTC_InitTypeDef RTC_InitStructure;
-	RTC_TimeTypeDef RTC_TimeStructure;
+//	RTC_TimeTypeDef RTC_TimeStructure;
 	/* Enable the PWR clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 
@@ -256,36 +287,13 @@ void BSP_RTC_init(void)
 	RTC_InitStructure.RTC_SynchPrediv = 0xFF-1;
 	RTC_Init(&RTC_InitStructure);
 
-	RTC_TimeStructure.RTC_Seconds = 0x00;
-	RTC_TimeStructure.RTC_Minutes = 0x01;
-	RTC_TimeStructure.RTC_Hours = 0x01;
-	RTC_TimeStructure.RTC_H12 = RTC_H12_AM;
-	RTC_SetTime(RTC_Format_BCD,&RTC_TimeStructure);
 
-//    RTC_DateStructure.RTC_Date = 30;
-//    RTC_DateStructure.RTC_Month = 5;
-//    RTC_DateStructure.RTC_WeekDay= RTC_Weekday_Thursday;
-//    RTC_DateStructure.RTC_Year = 12;
-//    RTC_SetDate(RTC_Format_BCD,&RTC_DateStructure);
   
     RTC_ExitInitMode();
 //    RTC_WriteBackupRegister(RTC_BKP_DR0,0X9527);
     RTC_WriteProtectionCmd(ENABLE);
 //    RTC_WriteBackupRegister(RTC_BKP_DR0,0x9527);  //?????,????
-//		
-//  /* Configure the RTC data register and RTC prescaler */
-//  /* ck_spre(1Hz) = RTCCLK(LSI) /(AsynchPrediv + 1)*(SynchPrediv + 1)*/
-//  RTC_InitStructure.RTC_AsynchPrediv = 0x1F;
-//  RTC_InitStructure.RTC_SynchPrediv  = 0x3FF;
-//  RTC_InitStructure.RTC_HourFormat   = RTC_HourFormat_24;
-//  RTC_Init(&RTC_InitStructure);
-  
-  /* Set the time to 00h 00mn 00s AM */
-  RTC_TimeStructure.RTC_H12     = RTC_H12_AM;
-  RTC_TimeStructure.RTC_Hours   = 0;
-  RTC_TimeStructure.RTC_Minutes = 0;
-  RTC_TimeStructure.RTC_Seconds = 0;  
-  RTC_SetTime(RTC_Format_BCD, &RTC_TimeStructure);
+	BSP_RTC_Set();
 }
 
 

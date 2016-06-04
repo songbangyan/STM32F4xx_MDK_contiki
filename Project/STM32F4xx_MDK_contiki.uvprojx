@@ -334,7 +334,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER STM32F40_41xxx AUTOSTART_ENABLE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\3APP;..\2Third_Party\fat_fs012\src;..\2Third_Party\contiki-3.0\core\sys;..\2Third_Party\contiki-3.0\core;..\2Third_Party\contiki-3.0\core\lib;..\2Third_Party\contiki-3.0\cpu\arm\stm32f4xx;..\1BSP\inc;..\0Libraries\CMSIS\Include;..\0Libraries\STM32F4xx_StdPeriph_Driver\inc;..\0Libraries\CMSIS\Device\ST\STM32F4xx\Include</IncludePath>
+              <IncludePath>..\3APP;..\2Third_Party\FatFs_vR0.08a;..\2Third_Party\contiki-3.0\core\sys;..\2Third_Party\contiki-3.0\core;..\2Third_Party\contiki-3.0\core\lib;..\2Third_Party\contiki-3.0\cpu\arm\stm32f4xx;..\1BSP\inc;..\0Libraries\CMSIS\Include;..\0Libraries\STM32F4xx_StdPeriph_Driver\inc;..\0Libraries\CMSIS\Device\ST\STM32F4xx\Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -592,6 +592,11 @@
               <FileType>1</FileType>
               <FilePath>..\1BSP\src\LCD12864.c</FilePath>
             </File>
+            <File>
+              <FileName>tool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1BSP\src\tool.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -616,6 +621,11 @@
               <FileName>displaytime.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\3APP\displaytime.c</FilePath>
+            </File>
+            <File>
+              <FileName>FatFS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3APP\FatFS.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -648,19 +658,19 @@
           <GroupName>Fatfs</GroupName>
           <Files>
             <File>
-              <FileName>diskio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\2Third_Party\fat_fs012\src\diskio.c</FilePath>
-            </File>
-            <File>
               <FileName>ff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\2Third_Party\fat_fs012\src\ff.c</FilePath>
+              <FilePath>..\2Third_Party\FatFs_vR0.08a\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2Third_Party\FatFs_vR0.08a\diskio.c</FilePath>
             </File>
             <File>
               <FileName>ccsbcs.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\2Third_Party\fat_fs012\src\option\ccsbcs.c</FilePath>
+              <FilePath>..\2Third_Party\FatFs_vR0.08a\option\ccsbcs.c</FilePath>
             </File>
           </Files>
         </Group>

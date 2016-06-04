@@ -2,6 +2,8 @@
 #define _RTC_H__
 
 #include "stm32f4xx.h" 
+#include "stdio.h"
+#include "tool.h"
 
 typedef struct
 {

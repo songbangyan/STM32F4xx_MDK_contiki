@@ -25,7 +25,7 @@
 #include "stm32f4xx_it.h"
 //#include "main.h"
 #include "stm324xg_eval_sdio_sd.h"
-#include "systick.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -132,7 +132,7 @@ void PendSV_Handler(void)
   */
 //void SysTick_Handler(void)
 //{
-//	TimingDelay_Decrement();
+
 //}
 
 /**
@@ -143,7 +143,7 @@ void PendSV_Handler(void)
 void SDIO_IRQHandler(void)
 {
   /* Process All SDIO Interrupt Sources */
-//  SD_ProcessIRQSrc();
+  SD_ProcessIRQSrc();
 }
 
 /**
@@ -155,7 +155,7 @@ void SDIO_IRQHandler(void)
 void SD_SDIO_DMA_IRQHANDLER(void)
 {
   /* Process DMA2 Stream3 or DMA2 Stream6 Interrupt Sources */
-//  SD_ProcessDMAIRQ();
+  SD_ProcessDMAIRQ();
 }
 
 /**

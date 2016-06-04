@@ -17,23 +17,25 @@ unsigned char hex2char(unsigned char hex)
 	
 void dispalytime(void)
 {
+	unsigned char i;
 	RTC_TimeTypeDef rtc;
-//	unsigned char i;
+	unsigned char rtcdatebuf[]={"2016-06-04"};
 	unsigned char rtcbuf[]={"00:00:00"};
+	RTC_DateTypeDef rtc_date;
+	RTC_GetDate(RTC_Format_BIN,&rtc_date);
+	sprintf((char *)rtcdatebuf,"20%02d-%02d-%02d",rtc_date.RTC_Year,rtc_date.RTC_Month,rtc_date.RTC_Date);
+	printf("\r\n%s",rtcdatebuf);
+	
 	RTC_GetTime(RTC_Format_BIN,&rtc);
 	sprintf((char *)rtcbuf,"%02d:%02d:%02d",rtc.RTC_Hours,rtc.RTC_Minutes,rtc.RTC_Seconds);
 	printf("\r\n%s",rtcbuf);
-//	for(i=0;i<8;i++)
-//	{
-//		WriteASCII(ASCII_W*i,0,rtcbuf+i);
-//	}
-	WriteASCII(0,0,rtcbuf);
-	WriteASCII(0,8,rtcbuf);
-	WriteASCII(0,ASCII_W*2,rtcbuf+2);
-	WriteASCII(0,ASCII_W*3,rtcbuf+3);
-	WriteASCII(0,ASCII_W*4,rtcbuf+4);
-	WriteASCII(0,ASCII_W*5,rtcbuf+5);
-	WriteASCII(0,ASCII_W*6,rtcbuf+6);
-	WriteASCII(0,ASCII_W*7,rtcbuf+7);
+	for(i=0;i<10;i++)
+	{
+		WriteASCII(0,ASCII_W*i,rtcdatebuf+i);
+	}
+	for(i=0;i<8;i++)
+	{
+		WriteASCII(2,ASCII_W*i,rtcbuf+i);
+	}
 	LCDrefur();
 }

@@ -63,6 +63,7 @@ PROCESS_THREAD(blink_process, ev, data)
 PROCESS(lcdrefur, "Lcdrefur");
 //PROCESS(&lcdrefur);
 extern void dispalytime(void);
+extern void dispalyfilename(void);
 PROCESS_THREAD(lcdrefur, ev, data)
 {  
   PROCESS_BEGIN();
@@ -73,6 +74,7 @@ PROCESS_THREAD(lcdrefur, ev, data)
     etimer_set(&et1, CLOCK_SECOND);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et1));   
 		dispalytime();
+//		dispalyfilename();
 //		WriteASCII(0,0,"1");
 //		LCDrefur();
 //    etimer_set(&et1, CLOCK_SECOND*2);
